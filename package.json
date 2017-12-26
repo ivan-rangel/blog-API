@@ -1,0 +1,32 @@
+{
+  "name": "blog-api",
+  "version": "1.0.0",
+  "description": "API for the ng5 and react examples",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivan-rangel/blog-API.git"
+  },
+  "author": "ivan05rangel@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ivan-rangel/blog-API/issues"
+  },
+  "homepage": "https://github.com/ivan-rangel/blog-API#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "colors": "^1.1.2",
+    "crypto": "^1.0.1",
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "helmet": "^3.9.0",
+    "jsonwebtoken": "^8.1.0",
+    "method-override": "^2.3.10",
+    "mongoose": "^4.13.7",
+    "morgan": "^1.9.0"
+  }
+}
