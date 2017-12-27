@@ -1,7 +1,9 @@
-let post = require('./routes/post.routes.js');
+const post = require('./routes/post.routes');
+const user = require('./routes/user.routes');
 
-let apiRoutes = function (app) {
+const apiRoutes = function (app) {
     app.use('/api/v1', post);
+    app.use('/api/v1', user);
 };
 
 module.exports = apiRoutes;
