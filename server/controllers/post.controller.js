@@ -5,6 +5,7 @@ exports.list = function (req, res) {
     Post
         .find({})
         .lean()
+        .populate('author')
         .exec()
         .then((posts) => {
             res.json(posts)
@@ -30,7 +31,7 @@ exports.create = function (req, res) {
     let post = new Post();
     post.title = req.body.title;
     post.body = req.body.body;
-    //post.author = req.body.author;
+    post.author = req.body.author;
 
     post
         .save()

@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const passport = require('passport')
+const email = require('../utils/mail')
 
 exports.signup = function (req, res) {
     User
@@ -22,13 +23,33 @@ exports.signup = function (req, res) {
                 .then((user) => {
                     var token = user.generateJwt();
                     res.json({ token: token });
+
+                    const locals = {
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        email: user.email,
+                        confirmEmailToken: user.confirmEmailToken,
+                        domain: process.env.API_DOMAIN
+                    }
+                    email
+                        .send({
+                            template: 'signup',
+                            message: {
+                                to: user.email
+                            },
+                            locals: locals
+                        })
+                        .then(response => {
+                            console.log(`Confirm account mail sent to: ${user.email}`);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
                 })
                 .catch((err) => {
                     console.log(err);
-                    res.status(500).json({ message: err })
+                    return res.status(500).json({ message: err })
                 })
-
-
         })
         .catch((err) => {
             console.log(err);
@@ -36,6 +57,50 @@ exports.signup = function (req, res) {
         });
 };
 
+exports.confirmEmail = function (req, res) {
+    let confirmEmailToken = req.params.confirmEmailToken;
+    if (!confirmEmailToken || confirmEmailToken === undefined)
+        return res.satus(400).send({ message: 'Invalid confirmation mail token' });
+    User
+        .findOne({ confirmEmailToken: confirmEmailToken })
+        .exec()
+        .then(user => {
+            user.accountConfirmed = true;
+            user.confirmEmailToken = '';
+            user
+                .save()
+                .then(userSaved => {
+                    res.redirect('http://localhost:4200');
+                    const locals = {
+                        firstName: userSaved.firstName,
+                        lastName: userSaved.lastName,
+                        domain: process.env.APP_DOMAIN
+                    }
+                    email
+                        .send({
+                            template: 'welcome',
+                            message: {
+                                to: userSaved.email
+                            },
+                            locals: locals
+                        })
+                        .then(response => {
+                            console.log(`Welcome mail sent to: ${user.email}`);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.status(500).send({ message: err })
+                })
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).redirec('http://localhost:4200');
+        })
+}
 exports.login = function (req, res) {
     req.body.email = req.body.email.toLowerCase();
     passport.authenticate('local-email', function (err, user, info) {
@@ -59,5 +124,5 @@ exports.list = function (req, res) {
         })
         .catch(err => {
             res.status(500).send({ message: err })
-        })    
+        })
 };

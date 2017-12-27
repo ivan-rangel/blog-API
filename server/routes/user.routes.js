@@ -19,6 +19,9 @@ router
 router
     .route('/users')
     .get(UserController.list);
+router
+    .route('/users/confirmEmail/:confirmEmailToken')
+    .get(UserController.confirmEmail);
 
 // router.route('/customer/confirmEmail/:token').get(UserController.confirmEmail);
 
