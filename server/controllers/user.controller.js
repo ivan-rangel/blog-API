@@ -100,7 +100,8 @@ exports.confirmEmail = function (req, res) {
             console.log(err);
             res.status(500).redirec('http://localhost:4200');
         })
-}
+};
+
 exports.login = function (req, res) {
     req.body.email = req.body.email.toLowerCase();
     passport.authenticate('local-email', function (err, user, info) {
@@ -113,6 +114,28 @@ exports.login = function (req, res) {
         }
     })(req, res);
 };
+
+exports.facebookLogin = passport.authenticate('facebook', {
+    scope: ['email']    
+});
+exports.facebookLoginCb = function (req, res) {
+    passport.authenticate('facebook', function (err, user, info) {
+
+        if (err) {
+            return res.status(404).json(err);
+        }
+        if (user) {
+            let token;
+            token = user.generateJwt();
+            res.status(200);
+            //res.json({"token" : token});
+            res.redirect('http://localhost:4200/fb-login/' + token);
+        } else {
+            res.status(401).json(info);
+        }
+    })(req, res);
+};
+
 
 exports.list = function (req, res) {
     User

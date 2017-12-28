@@ -12,13 +12,22 @@ const UserController = require('../controllers/user.controller');
 router
     .route('/users')
     .post(UserController.signup);
+
 router
     .route('/users/login')
     .post(UserController.login);
 
 router
-    .route('/users')
-    .get(UserController.list);
+    .route('/users/facebookLogin')
+    .get(UserController.facebookLogin);
+
+router
+    .route('/users/facebook-login/callback')
+    .get(UserController.facebookLoginCb);
+
+// router
+//     .route('/users')
+//     .get(UserController.list);
 router
     .route('/users/confirmEmail/:confirmEmailToken')
     .get(UserController.confirmEmail);

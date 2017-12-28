@@ -6,6 +6,10 @@ router
     .get(PostController.list);
 
 router
+    .route('/posts/:postId')
+    .get(PostController.listOne);
+
+router
     .route('/posts')
     .post(PostController.create);
 
