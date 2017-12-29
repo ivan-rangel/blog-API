@@ -13,4 +13,12 @@ router
     .route('/posts')
     .post(PostController.create);
 
+router
+    .route('/posts/featured')
+    .patch(PostController.feature);
+router
+
+    .route('/posts/shown')
+    .patch(PostController.shown);
+
 module.exports = router;

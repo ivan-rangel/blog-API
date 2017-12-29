@@ -41,5 +41,54 @@ exports.create = function (req, res) {
         .catch((err) => {
             res.status(500).send(err);
         })
+};
 
+exports.feature = function (req, res) {
+    if (req.body.postId === undefined || !req.body.postId)
+        return res.status(400).send({ message: 'Invalid post id' });
+
+    Post
+        .findById(req.body.postId)
+        .exec()
+        .then(post => {
+            post.isFeatured = !post.isFeatured;
+            post
+                .save()
+                .then(postSaved => {
+                    return res.send(200)
+                })
+                .catch(err => {
+                    console.log(err);
+                    return res.status(500).send({ message: err })
+                })
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).send({ message: err })
+        })
+};
+
+exports.shown = function (req, res) {
+    if (req.body.postId === undefined || !req.body.postId)
+        return res.status(400).send({ message: 'Invalid post id' });
+
+    Post
+        .findById(req.body.postId)
+        .exec()
+        .then(post => {
+            post.isVisible = !post.isVisible;
+            post
+                .save()
+                .then(postSaved => {
+                    return res.send(200)
+                })
+                .catch(err => {
+                    console.log(err);
+                    return res.status(500).send({ message: err })
+                })
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).send({ message: err })
+        })
 };
