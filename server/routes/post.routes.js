@@ -1,5 +1,7 @@
-let router = require('express').Router();
-let PostController = require('../controllers/post.controller.js');
+const router = require('express').Router();
+const PostController = require('../controllers/post.controller.js');
+const requireUserAuth = require('../utils/jwt_check').requireUserAuth
+const requireAdminAuth = require('../utils/jwt_check').requireAdminAuth
 
 router
     .route('/posts')
@@ -10,15 +12,23 @@ router
     .get(PostController.listOne);
 
 router
+    .route('/posts/userId/:userId')
+    .get(requireUserAuth, PostController.listByUser);
+
+router
     .route('/posts')
-    .post(PostController.create);
+    .post(requireUserAuth, PostController.create);
 
 router
     .route('/posts/featured')
-    .patch(PostController.feature);
-router
+    .patch(requireAdminAuth, PostController.feature);
 
+router
     .route('/posts/shown')
-    .patch(PostController.shown);
+    .patch(requireAdminAuth, PostController.shown);
+
+router
+    .route('/posts/:postId')
+    .delete(requireAdminAuth, PostController.delete);
 
 module.exports = router;

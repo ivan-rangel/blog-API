@@ -116,7 +116,7 @@ exports.login = function (req, res) {
 };
 
 exports.facebookLogin = passport.authenticate('facebook', {
-    scope: ['email']    
+    scope: ['email']
 });
 exports.facebookLoginCb = function (req, res) {
     passport.authenticate('facebook', function (err, user, info) {
@@ -139,7 +139,7 @@ exports.facebookLoginCb = function (req, res) {
 
 exports.list = function (req, res) {
     User
-        .find()
+        .find({ userType: 'user' })
         .lean()
         .exec()
         .then(users => {
@@ -149,3 +149,83 @@ exports.list = function (req, res) {
             res.status(500).send({ message: err })
         })
 };
+
+exports.delete = function (req, res) {
+    if (req.params.userId === undefined || !req.params.userId)
+        return res.status(400).send({ message: 'Invalid user id' });
+
+    User
+        .findByIdAndRemove(req.params.userId)
+        .exec()
+        .then(user => {
+            res.send({ message: 'User deleted' });
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).send({ message: err })
+        })
+};
+
+exports.update = function (req, res) {
+    if (req.body._id === undefined || !req.body._id)
+        return res.status(400).send({ message: 'Invalid user id' });
+
+    User
+        .findById(req.body._id)
+        .exec()
+        .then(user => {
+            if (user) {
+                user.email = req.body.email
+                user.firstName = req.body.firstName
+                user.lastName = req.body.lastName
+                user.profileImage = req.body.profileImage
+                user
+                    .save()
+                    .then(userSaved => {
+                        res.send({ message: 'User updated' })
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+            } else {
+                return res.status(400).send({ message: 'User not found' })
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).send({ message: err })
+        })
+};
+
+exports.newToken = function (req, res) {
+    if (req.newToken) {
+        return res.status(200).json({ token: req.newToken });
+    } else {
+        User
+            .findById(req.userInfo._id)
+            .exec()
+            .then((user) => {
+                let token = user.generateJwt();
+                return res.status(200).json({ token: token });
+            }).catch((err) => {
+                console.log(err);
+                res.status(500).json({ message: "User not found anymore" });
+            });
+    }
+}
+
+exports.uploadProfileImage = function (req, res, next) {
+    if (!req.file) {
+        console.log("No file received");
+        return res.status(400).send({
+            message: 'No file provided'
+        });
+    }
+    if (next) {
+        return res.send({
+            message: 'File uploeaded',
+            filename: req.file.filename
+        })
+        next()
+    }
+}

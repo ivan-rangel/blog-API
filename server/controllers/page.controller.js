@@ -64,7 +64,7 @@ exports.contact = function (req, res) {
         })
         .then(response => {
             console.log(`Contact mail sent from: ${req.body.email}`);
-            res.send(200);
+            res.send({ message: `Contact mail sent from: ${req.body.email}` });
         })
         .catch(err => {
             console.log(err);

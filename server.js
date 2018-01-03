@@ -18,9 +18,18 @@ const cors = require('cors')
 require('./server/config/passport');
 
 
+app.use('/profile_imgs', express.static(path.join(__dirname, 'profile_imgs')))
 /** Protect app **/
+// app.use(function (req, res, next) {
+//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//     next();
+// });
 //helmet(app);
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:4200',
+    allowedHeaders: ['Content-Type', 'Authorization','X-Requested-With']
+}));
 app.use(morgan('dev'))
 /** Parse requests **/
 app.use(bodyParser.json());
@@ -30,7 +39,7 @@ app.use(methodOverride('X-HTTP-Method-Override'));
 
 /** Set up routes **/
 apiRoutes(app);
-//app.all('*', (req, res) => { res.sendFile(path.join(__dirname, 'dist/index.html')); });
+//app.all('*', (req, res) => {});
 
 /** Attempt to connect the DB **/
 mongoose.Promise = global.Promise;
