@@ -6,7 +6,7 @@ let pageSchema = new Schema({
         type: String
     },
     content: {
-        type: Schema.Types.Mixed
+        type: Array
     },
     createdAt: {
         type: Date,
