@@ -10,7 +10,7 @@ router
 
 router
     .route('/users/profile-img')
-    .post(requireUserAuth, uploader, UserController.uploadProfileImage);
+    .post(uploader, UserController.uploadProfileImage);
 
 router
     .route('/users/newToken')

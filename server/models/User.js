@@ -9,8 +9,7 @@ var userSchema = new mongoose.Schema({
         unique: true
     },
     profileImage: {
-        type: String,
-        required: true,
+        type: String,        
         default: './src/assets/default.png'
     },
     firstName: {

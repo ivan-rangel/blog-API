@@ -16,7 +16,6 @@ exports.list = function (req, res) {
 };
 
 exports.listOne = function (req, res) {
-    console.log(req.params);
     if (!req.params.pageName || req.params.pageName === undefined) {
         return res.status(400).send({ message: 'Page name undefined' });
     }
