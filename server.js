@@ -27,8 +27,8 @@ app.use('/profile_imgs', express.static(path.join(__dirname, 'profile_imgs')))
 //helmet(app);
 app.use(cors({
     credentials: true,
-    origin: process.env.APP_DOMAIN,
-    allowedHeaders: ['Content-Type', 'Authorization','X-Requested-With']
+    origin: `http://${process.env.APP_DOMAIN}`,
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 app.use(morgan('dev'))
 /** Parse requests **/
