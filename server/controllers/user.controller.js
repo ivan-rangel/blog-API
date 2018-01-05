@@ -70,7 +70,7 @@ exports.confirmEmail = function (req, res) {
             user
                 .save()
                 .then(userSaved => {
-                    res.redirect('http://localhost:4200');
+                    res.redirect(process.env.APP_DOMAIN);
                     const locals = {
                         firstName: userSaved.firstName,
                         lastName: userSaved.lastName,
@@ -98,7 +98,7 @@ exports.confirmEmail = function (req, res) {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).redirec('http://localhost:4200');
+            res.status(500).redirec(process.env.APP_DOMAIN);
         })
 };
 
@@ -129,7 +129,7 @@ exports.facebookLoginCb = function (req, res) {
             token = user.generateJwt();
             res.status(200);
             //res.json({"token" : token});
-            res.redirect('http://localhost:4200/fb-login/' + token);
+            res.redirect(`${process.env.APP_DOMAIN}/fb-login/token`);
         } else {
             res.status(401).json(info);
         }
